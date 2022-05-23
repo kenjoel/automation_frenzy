@@ -17,6 +17,9 @@
 <script>
 import Chart from 'chart.js/auto';
 
+// passed = ["#49be25"]
+// unknown:
+
 export default {
     name: 'PieChart',
     props: ['canvas_ref', 'labels', 'datasets', 'title', 'chartType', 'color', 'slicerColors', 'activeColor', 'defaultColor'],
@@ -55,6 +58,13 @@ export default {
         }
     },
     methods: {
+          generateColors() {
+            return Array.from({length: this.labels.length}, (v,) => {
+                console.log(v)
+                this.defaultColor
+                })
+        },
+
         renderChart() {
             const ctx = this.$refs.pieChartArea.getContext('2d')
             if (!this.chart) {
@@ -100,7 +110,7 @@ export default {
             const labelPosition = this.chart.data.labels.indexOf(value)
             let colors = this.generateColors()
             colors[labelPosition] = this.activeColor
-            this.chart.data.datasets[0].backgroundColor = colors
+            this.chart.data.datasets[0].backgroundColor = colors    
             this.chart.update()
         },
         handleCustomFilter(value) {
