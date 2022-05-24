@@ -21,7 +21,7 @@ async def upload_csv(file: List[UploadFile], request: Request):
     result = test1["Result"]
     count_percent = result.value_counts().to_dict()
     test1.to_csv("static/full_compliance_report.csv")
-    path =str(request.base_url) + "static/somethingelse.csv"
+    path =str(request.base_url) + "static/full_compliance_report.csv"
     print(count_percent)
     
     return {"data":count_percent, "url": path}
