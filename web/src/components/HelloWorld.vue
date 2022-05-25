@@ -3,7 +3,7 @@
     <h1 v-if="vue_env=='dev'">I'm in (DEVELOPMENT)</h1>
     <h1 v-else>I landed in (PRODUCTION)</h1>
     <form @submit="submitForm">
-    <input class="input" type="file" name="file" placeholder="File name" multiple required>
+    <input class="input" type="file" name="files" placeholder="File name" multiple required>
     <button type="submit">submit</button>
     </form>
 

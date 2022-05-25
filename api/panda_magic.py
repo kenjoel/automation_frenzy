@@ -7,13 +7,6 @@ from starlette.datastructures import URL
 
 from api import app
 
-def helper(file):
-    items = []
-    temp_df = pd.read_csv(file)
-    items.append(temp_df)
-    # print(items)
-    return items
-
 
 @app.get("/")
 def root():
@@ -23,30 +16,23 @@ def root():
 @app.post("/upload")
 async def upload_csv(files: List[UploadFile], request: Request):
     required_columns = ["Hostname", "Device Policy", "Result"]
-    file_dataframes = pd.concat(map(pd.read_csv, [x.file for x in files]), ignore_index=True)
-
-
-    test1 = []
-
+    items = []
+    file_result = []
     for i in files:
-        helper(i.file)
-        # print(file_dataframes)
-        # print(len(files))
-        test1 = file_dataframes[required_columns]
-        # print(test1)
-    
-    result = test1["Result"]
+        file_items = []
+        file_dataframe = pd.read_csv(i.file)
+        append_dataframe = file_dataframe[required_columns]
+        file_items.append(append_dataframe)
+        items.append(append_dataframe)
+    combined_dataframes = pd.concat(items)
+    result = combined_dataframes["Result"]
     count_percent = result.value_counts().to_dict()
-    test1.to_csv("static/full_compliance_report.csv")
+    combined_dataframes.to_csv("static/full_compliance_report.csv")
     path =str(request.base_url) + "static/full_compliance_report.csv"
-    print(count_percent)
-
-    # return {"data":count_percent, "url": path}
+    for i in items:
+        result = i["Result"]
+        hostname = i["Hostname"]
+        file_count_percent = result.value_counts().to_dict()
+        file_result.append({"Hostname": hostname, "percent": file_count_percent}) 
+    return {"data":count_percent, "url": path, "files": file_result}
    
-
-
-    # else:
-    #     dataframe = pd.read_csv(file[0].file)
-    #     required_columns = ["Hostname", "Device Policy", "Result"]
-    #     test1 = dataframe[required_columns]
-    #     one_file = test1.to_csv("someshit.csv")
