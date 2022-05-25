@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <h1 v-if="vue_env=='dev'">I'm in (DEVELOPMENT)</h1>
-    <h1 v-else>I landed in (PRODUCTION)</h1>
+    <h1 v-if="vue_env=='dev'">Upload CSV To Analyse</h1>
+    <h1 v-else>Upload CSV To Asnalyse</h1>
     <form @submit="submitForm">
     <input class="input" type="file" name="files" placeholder="File name" multiple required>
     <button type="submit">submit</button>
@@ -14,6 +14,16 @@
           chart-type="non-interactive"
           title=""
       />
+      <div class="charts">
+        <div v-for="chart in result.files" :key="Object.values(chart.Hostname).find( () => true)">
+         <pie-chart 
+          :datasets="Object.values(chart.percent)"
+          :labels="Object.keys(chart.percent)"
+          chart-type="non-interactive"
+          :title="Object.values(chart.Hostname).find( () => true)"
+      />
+      </div>
+      </div>
     <a :href="result.url" download="">Download File</a>
 
     </div>
@@ -75,6 +85,21 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.charts{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  justify-content: center;
+}
+
+.charts > div{
+  margin: 10px;
+}
+
 h3 {
   margin: 40px 0 0;
 }

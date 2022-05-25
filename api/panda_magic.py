@@ -1,4 +1,5 @@
 from cgi import test
+from locale import normalize
 from typing import List
 
 from fastapi import Request, UploadFile
@@ -26,7 +27,7 @@ async def upload_csv(files: List[UploadFile], request: Request):
         items.append(append_dataframe)
     combined_dataframes = pd.concat(items)
     result = combined_dataframes["Result"]
-    count_percent = result.value_counts().to_dict()
+    count_percent = result.value_counts(normalize=True).multiply(100).to_dict()
     combined_dataframes.to_csv("static/full_compliance_report.csv")
     path =str(request.base_url) + "static/full_compliance_report.csv"
     for i in items:
